@@ -17,7 +17,7 @@ export async function createSession(): Promise<CreateSessionResponse> {
   const { sessionId, token } = await res.json() as { sessionId: string; token: string };
 
   const publicServer = process.env.NEXT_PUBLIC_SIGNALING_SERVER ?? SERVER_URL;
-  const agentCommand = `powershell -Command "iwr ${publicServer}/agent.exe -OutFile $env:TEMP\\agent.exe; Start-Process $env:TEMP\\agent.exe '--token ${token} --server ${publicServer}'"`;
+  const agentCommand = `powershell -Command "iwr ${publicServer}/agent.exe -OutFile $env:TEMP\\agent.exe; & $env:TEMP\\agent.exe --token ${token} --server ${publicServer}"`;
 
   return {
     token,
