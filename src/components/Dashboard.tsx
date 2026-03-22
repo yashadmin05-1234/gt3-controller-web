@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import type { SessionRecord } from '@/lib/session';
-import type { CreateSessionResponse } from '@gt3/shared';
+import type { CreateSessionResponse } from '@/types/session';
 import { SessionCard } from './SessionCard';
 import { SessionCreator } from './SessionCreator';
 import { AgentDownload } from './AgentDownload';

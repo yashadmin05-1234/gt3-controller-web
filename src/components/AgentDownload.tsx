@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import type { CreateSessionResponse } from '@gt3/shared';
+import type { CreateSessionResponse } from '@/types/session';
 
 interface Props {
   result: CreateSessionResponse;

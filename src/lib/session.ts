@@ -1,6 +1,6 @@
 import { getSignalingServer } from './firebase-admin';
 import { SERVER_URL } from '@/config/server';
-import type { CreateSessionResponse } from '@gt3/shared';
+import type { CreateSessionResponse } from '@/types/session';
 
 export interface SessionRecord {
   id: string;
