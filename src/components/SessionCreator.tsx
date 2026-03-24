@@ -16,7 +16,7 @@ export function SessionCreator({ onCreated }: Props) {
       const res = await fetch('/api/session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sourceName: sourceName || 'Source', clientName: 'Client' }),
+        body: JSON.stringify({ name: sourceName || 'Unnamed Session' }),
       });
       if (!res.ok) throw new Error('Failed to create session');
       const data = (await res.json()) as CreateSessionResponse;

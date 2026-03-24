@@ -47,6 +47,7 @@ export function SessionTable({ sessions, onClose, onRegenerateToken }: Props) {
         <table className="w-full">
           <thead className="bg-bg border-b border-border">
             <tr>
+              <th className="text-left px-4 py-3 text-xs font-semibold text-dim uppercase tracking-wide">Name</th>
               <th className="text-left px-4 py-3 text-xs font-semibold text-dim uppercase tracking-wide">Session ID</th>
               <th className="text-left px-4 py-3 text-xs font-semibold text-dim uppercase tracking-wide">Status</th>
               <th className="text-left px-4 py-3 text-xs font-semibold text-dim uppercase tracking-wide">Source</th>
@@ -62,6 +63,11 @@ export function SessionTable({ sessions, onClose, onRegenerateToken }: Props) {
               
               return (
                 <tr key={session.id} className="hover:bg-bg/50 transition-colors">
+                  <td className="px-4 py-3">
+                    <span className="text-xs text-slate-200 font-medium">
+                      {session.name || 'Unnamed Session'}
+                    </span>
+                  </td>
                   <td className="px-4 py-3">
                     <button
                       onClick={() => copyId(session.id)}

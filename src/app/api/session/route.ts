@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSession, listSessions, closeSession } from '@/lib/session';
 
-export async function POST(_req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const result = await createSession();
+    const body = await req.json().catch(() => ({}));
+    const name = body.name || body.sourceName || 'Unnamed Session';
+    const result = await createSession(name);
     return NextResponse.json(result, { status: 201 });
   } catch (err) {
     console.error('[POST /api/session]', err);

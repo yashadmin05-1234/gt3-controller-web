@@ -4,15 +4,20 @@ import type { CreateSessionResponse } from '@/types/session';
 
 export interface SessionRecord {
   id: string;
+  name?: string;
   sourceId: string | null;
   clientId: string | null;
   state: string;
   createdAt: number;
 }
 
-export async function createSession(): Promise<CreateSessionResponse> {
+export async function createSession(name?: string): Promise<CreateSessionResponse> {
   const server = getSignalingServer();
-  const res = await fetch(`${server}/session`, { method: 'POST' });
+  const res = await fetch(`${server}/session`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: name || 'Unnamed Session' }),
+  });
   if (!res.ok) throw new Error(`Signaling server error: ${res.status}`);
   const { sessionId, token } = await res.json() as { sessionId: string; token: string };
 
