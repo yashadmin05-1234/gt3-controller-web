@@ -100,10 +100,10 @@ export function SessionTable({ sessions, onClose, onRegenerateToken }: Props) {
                       {openMenu === session.id && (
                         <>
                           <div 
-                            className="fixed inset-0 z-10" 
+                            className="fixed inset-0 z-30" 
                             onClick={() => setOpenMenu(null)}
                           />
-                          <div className="absolute right-0 mt-1 bg-surface border border-border rounded-lg shadow-xl z-20 min-w-[160px]">
+                          <div className="absolute right-0 mt-1 bg-surface border border-border rounded-lg shadow-xl z-40 min-w-[160px]">
                             <button
                               onClick={() => {
                                 copyId(session.id);
