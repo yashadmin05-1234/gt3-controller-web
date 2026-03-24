@@ -42,8 +42,8 @@ export function SessionTable({ sessions, onClose, onRegenerateToken }: Props) {
   }
 
   return (
-    <div className="bg-surface border border-border rounded-xl overflow-hidden">
-      <div className="overflow-x-auto">
+    <div className="bg-surface border border-border rounded-xl overflow-visible">
+      <div className="overflow-visible">
         <table className="w-full">
           <thead className="bg-bg border-b border-border">
             <tr>
