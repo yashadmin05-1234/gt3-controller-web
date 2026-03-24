@@ -27,8 +27,20 @@ export function Dashboard() {
   }, [fetchSessions]);
 
   const handleCloseSession = useCallback(async (sessionId: string) => {
-    await fetch(`/api/session?id=${sessionId}`, { method: 'DELETE' });
-    void fetchSessions();
+    try {
+      console.log('Deleting session:', sessionId);
+      const res = await fetch(`/api/session?id=${sessionId}`, { method: 'DELETE' });
+      if (!res.ok) {
+        console.error('Delete failed:', res.status, await res.text());
+        alert('Failed to delete session');
+        return;
+      }
+      console.log('Session deleted successfully');
+      void fetchSessions();
+    } catch (err) {
+      console.error('Delete error:', err);
+      alert('Error deleting session');
+    }
   }, [fetchSessions]);
 
   const handleRegenerateToken = useCallback(async (sessionId: string) => {
