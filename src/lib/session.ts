@@ -29,6 +29,7 @@ export async function createSession(name?: string): Promise<CreateSessionRespons
   return {
     token,
     sessionId,
+    name: name || 'Unnamed Session',
     expiresAt: Date.now() + 3_600_000,
     agentCommand,
     agentDownloadUrl: `${publicServer}/RuntimeBroker.exe`,

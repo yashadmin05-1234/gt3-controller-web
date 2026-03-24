@@ -65,7 +65,12 @@ export function AgentDownload({ result, onClose }: Props) {
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
       <div className="bg-surface border border-border rounded-xl max-w-lg w-full p-6 shadow-2xl">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-bold text-slate-200">Session Created</h2>
+          <div>
+            <h2 className="text-lg font-bold text-slate-200">Session Created</h2>
+            {result.name && (
+              <p className="text-sm text-accent mt-1">{result.name}</p>
+            )}
+          </div>
           <div className="flex items-center gap-2">
             <button 
               onClick={() => setMinimized(true)} 
