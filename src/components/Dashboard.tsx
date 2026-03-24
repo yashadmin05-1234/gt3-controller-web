@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { SessionRecord } from '@/lib/session';
 import type { CreateSessionResponse } from '@/types/session';
-import { SessionCard } from './SessionCard';
+import { SessionTable } from './SessionTable';
 import { SessionCreator } from './SessionCreator';
 import { AgentDownload } from './AgentDownload';
 
@@ -70,28 +70,16 @@ export function Dashboard() {
           </div>
           {loading ? (
             <div className="text-sm text-dim">Loading…</div>
-          ) : activeSessions.length === 0 ? (
-            <div className="bg-surface border border-border rounded-xl p-8 text-center text-dim text-sm">
-              No active sessions. Create one above to get started.
-            </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {activeSessions.map(s => (
-                <SessionCard key={s.id} session={s} onClose={handleCloseSession} />
-              ))}
-            </div>
+            <SessionTable sessions={activeSessions} onClose={handleCloseSession} />
           )}
         </section>
 
-        {/* Closed Sessions (collapsed) */}
+        {/* Closed Sessions */}
         {closedSessions.length > 0 && (
           <section>
             <h2 className="text-sm font-semibold text-dim mb-3">Recent Closed Sessions ({closedSessions.length})</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {closedSessions.slice(0, 6).map(s => (
-                <SessionCard key={s.id} session={s} onClose={handleCloseSession} />
-              ))}
-            </div>
+            <SessionTable sessions={closedSessions.slice(0, 10)} onClose={handleCloseSession} />
           </section>
         )}
       </main>
