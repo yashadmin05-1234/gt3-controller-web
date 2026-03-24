@@ -34,6 +34,23 @@ function CopyField({ label, value }: { label: string; value: string }) {
 
 export function AgentDownload({ result, onClose }: Props) {
   const [minimized, setMinimized] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [sessionName, setSessionName] = useState(result.name || 'Unnamed Session');
+
+  async function handleSaveName() {
+    try {
+      const res = await fetch(`/api/session?id=${result.sessionId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: sessionName }),
+      });
+      if (res.ok) {
+        setIsEditingName(false);
+      }
+    } catch (err) {
+      console.error('Failed to update session name:', err);
+    }
+  }
 
   if (minimized) {
     // Minimized floating bar at bottom
@@ -65,11 +82,47 @@ export function AgentDownload({ result, onClose }: Props) {
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
       <div className="bg-surface border border-border rounded-xl max-w-lg w-full p-6 shadow-2xl">
         <div className="flex items-center justify-between mb-5">
-          <div>
+          <div className="flex-1">
             <h2 className="text-lg font-bold text-slate-200">Session Created</h2>
-            {result.name && (
-              <p className="text-sm text-accent mt-1">{result.name}</p>
-            )}
+            <div className="flex items-center gap-2 mt-1">
+              {isEditingName ? (
+                <>
+                  <input
+                    type="text"
+                    value={sessionName}
+                    onChange={(e) => setSessionName(e.target.value)}
+                    className="bg-bg border border-accent rounded px-2 py-1 text-xs text-slate-200 outline-none flex-1 max-w-xs"
+                    autoFocus
+                  />
+                  <button
+                    onClick={handleSaveName}
+                    className="text-xs text-accent hover:text-accent/80 font-semibold"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSessionName(result.name || 'Unnamed Session');
+                      setIsEditingName(false);
+                    }}
+                    className="text-xs text-dim hover:text-slate-200"
+                  >
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm text-accent">{sessionName}</p>
+                  <button
+                    onClick={() => setIsEditingName(true)}
+                    className="text-xs text-dim hover:text-accent transition-colors"
+                    title="Edit name"
+                  >
+                    ✎
+                  </button>
+                </>
+              )}
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <button 
