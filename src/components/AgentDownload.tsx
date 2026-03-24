@@ -36,19 +36,39 @@ export function AgentDownload({ result, onClose }: Props) {
   const [minimized, setMinimized] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [sessionName, setSessionName] = useState(result.name || 'Unnamed Session');
+  const [saving, setSaving] = useState(false);
 
   async function handleSaveName() {
+    if (!sessionName.trim()) {
+      alert('Session name cannot be empty');
+      return;
+    }
+    
+    setSaving(true);
     try {
+      console.log('Saving session name:', sessionName, 'for session:', result.sessionId);
       const res = await fetch(`/api/session?id=${result.sessionId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: sessionName }),
       });
+      
+      console.log('Save response status:', res.status);
+      const data = await res.json();
+      console.log('Save response data:', data);
+      
       if (res.ok) {
+        console.log('Session name saved successfully');
         setIsEditingName(false);
+      } else {
+        console.error('Save failed:', data);
+        alert('Failed to save session name: ' + (data.error || 'Unknown error'));
       }
     } catch (err) {
       console.error('Failed to update session name:', err);
+      alert('Error saving session name: ' + err);
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -96,9 +116,10 @@ export function AgentDownload({ result, onClose }: Props) {
                   />
                   <button
                     onClick={handleSaveName}
-                    className="text-xs text-accent hover:text-accent/80 font-semibold"
+                    disabled={saving}
+                    className="text-xs text-accent hover:text-accent/80 font-semibold disabled:opacity-50"
                   >
-                    Save
+                    {saving ? 'Saving...' : 'Save'}
                   </button>
                   <button
                     onClick={() => {
