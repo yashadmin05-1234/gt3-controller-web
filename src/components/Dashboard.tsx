@@ -31,6 +31,28 @@ export function Dashboard() {
     void fetchSessions();
   }, [fetchSessions]);
 
+  const handleRegenerateToken = useCallback(async (sessionId: string) => {
+    try {
+      // Create a new session to get fresh token and command
+      const res = await fetch('/api/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sourceName: 'Regenerated', clientName: 'Client' }),
+      });
+      if (!res.ok) throw new Error('Failed to regenerate token');
+      const data = (await res.json()) as CreateSessionResponse;
+      
+      // Show the new credentials in modal
+      setNewSession(data);
+      
+      // Close the old session
+      await fetch(`/api/session?id=${sessionId}`, { method: 'DELETE' });
+      void fetchSessions();
+    } catch (err) {
+      console.error('Failed to regenerate token:', err);
+    }
+  }, [fetchSessions]);
+
   const activeSessions = sessions.filter(s => s.state !== 'closed');
   const closedSessions = sessions.filter(s => s.state === 'closed');
 
@@ -71,7 +93,11 @@ export function Dashboard() {
           {loading ? (
             <div className="text-sm text-dim">Loading…</div>
           ) : (
-            <SessionTable sessions={activeSessions} onClose={handleCloseSession} />
+            <SessionTable 
+              sessions={activeSessions} 
+              onClose={handleCloseSession}
+              onRegenerateToken={handleRegenerateToken}
+            />
           )}
         </section>
 
@@ -79,7 +105,10 @@ export function Dashboard() {
         {closedSessions.length > 0 && (
           <section>
             <h2 className="text-sm font-semibold text-dim mb-3">Recent Closed Sessions ({closedSessions.length})</h2>
-            <SessionTable sessions={closedSessions.slice(0, 10)} onClose={handleCloseSession} />
+            <SessionTable 
+              sessions={closedSessions.slice(0, 10)} 
+              onClose={handleCloseSession}
+            />
           </section>
         )}
       </main>

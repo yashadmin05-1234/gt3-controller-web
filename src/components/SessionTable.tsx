@@ -5,6 +5,7 @@ import type { SessionRecord } from '@/lib/session';
 interface Props {
   sessions: SessionRecord[];
   onClose: (id: string) => void;
+  onRegenerateToken?: (sessionId: string) => void;
 }
 
 const stateColors: Record<string, string> = {
@@ -14,8 +15,9 @@ const stateColors: Record<string, string> = {
   closed:     'bg-red-900/50 text-red-400',
 };
 
-export function SessionTable({ sessions, onClose }: Props) {
+export function SessionTable({ sessions, onClose, onRegenerateToken }: Props) {
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
 
   function copyId(id: string) {
     navigator.clipboard.writeText(id).then(() => {
@@ -88,16 +90,55 @@ export function SessionTable({ sessions, onClose }: Props) {
                     <span className="text-xs text-dim">{getAge(session.createdAt)}</span>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    {session.state !== 'closed' ? (
+                    <div className="relative inline-block">
                       <button
-                        onClick={() => onClose(session.id)}
-                        className="text-xs text-danger hover:text-red-300 transition-colors font-semibold"
+                        onClick={() => setOpenMenu(openMenu === session.id ? null : session.id)}
+                        className="text-xs text-slate-400 hover:text-accent transition-colors font-semibold px-2 py-1"
                       >
-                        End Session
+                        ⋮
                       </button>
-                    ) : (
-                      <span className="text-xs text-dim">—</span>
-                    )}
+                      {openMenu === session.id && (
+                        <>
+                          <div 
+                            className="fixed inset-0 z-10" 
+                            onClick={() => setOpenMenu(null)}
+                          />
+                          <div className="absolute right-0 mt-1 bg-surface border border-border rounded-lg shadow-xl z-20 min-w-[160px]">
+                            <button
+                              onClick={() => {
+                                copyId(session.id);
+                                setOpenMenu(null);
+                              }}
+                              className="w-full text-left px-4 py-2 text-xs text-slate-200 hover:bg-bg transition-colors flex items-center gap-2"
+                            >
+                              <span>📋</span> Copy Session ID
+                            </button>
+                            {session.state !== 'closed' && onRegenerateToken && (
+                              <button
+                                onClick={() => {
+                                  onRegenerateToken(session.id);
+                                  setOpenMenu(null);
+                                }}
+                                className="w-full text-left px-4 py-2 text-xs text-slate-200 hover:bg-bg transition-colors flex items-center gap-2 border-t border-border"
+                              >
+                                <span>🔄</span> Regenerate Token
+                              </button>
+                            )}
+                            {session.state !== 'closed' && (
+                              <button
+                                onClick={() => {
+                                  onClose(session.id);
+                                  setOpenMenu(null);
+                                }}
+                                className="w-full text-left px-4 py-2 text-xs text-danger hover:bg-bg transition-colors flex items-center gap-2 border-t border-border"
+                              >
+                                <span>🗑️</span> Delete Session
+                              </button>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </td>
                 </tr>
               );
