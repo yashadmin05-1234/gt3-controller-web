@@ -109,9 +109,9 @@ export function SessionTable({ sessions, onClose, onRegenerateToken }: Props) {
                                 copyId(session.id);
                                 setOpenMenu(null);
                               }}
-                              className="w-full text-left px-4 py-2 text-xs text-slate-200 hover:bg-bg transition-colors flex items-center gap-2"
+                              className="w-full text-left px-4 py-2 text-xs text-slate-200 hover:bg-bg transition-colors"
                             >
-                              <span>📋</span> Copy Session ID
+                              Copy Session ID
                             </button>
                             {session.state !== 'closed' && onRegenerateToken && (
                               <button
@@ -119,22 +119,20 @@ export function SessionTable({ sessions, onClose, onRegenerateToken }: Props) {
                                   onRegenerateToken(session.id);
                                   setOpenMenu(null);
                                 }}
-                                className="w-full text-left px-4 py-2 text-xs text-slate-200 hover:bg-bg transition-colors flex items-center gap-2 border-t border-border"
+                                className="w-full text-left px-4 py-2 text-xs text-slate-200 hover:bg-bg transition-colors border-t border-border"
                               >
-                                <span>🔄</span> Regenerate Token
+                                Regenerate Token
                               </button>
                             )}
-                            {session.state !== 'closed' && (
-                              <button
-                                onClick={() => {
-                                  onClose(session.id);
-                                  setOpenMenu(null);
-                                }}
-                                className="w-full text-left px-4 py-2 text-xs text-danger hover:bg-bg transition-colors flex items-center gap-2 border-t border-border"
-                              >
-                                <span>🗑️</span> Delete Session
-                              </button>
-                            )}
+                            <button
+                              onClick={() => {
+                                onClose(session.id);
+                                setOpenMenu(null);
+                              }}
+                              className="w-full text-left px-4 py-2 text-xs text-danger hover:bg-bg transition-colors border-t border-border"
+                            >
+                              Delete Session
+                            </button>
                           </div>
                         </>
                       )}
